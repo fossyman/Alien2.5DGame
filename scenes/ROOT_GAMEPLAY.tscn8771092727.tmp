@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://sb3u5e7o208"]
+
+[ext_resource type="Script" uid="uid://dgltfnultimkg" path="res://src/RootManager.gd" id="1_x8bhv"]
+[ext_resource type="PackedScene" uid="uid://3n2q5dbpqu6m" path="res://level_blockout.tscn" id="2_e8umy"]
+[ext_resource type="PackedScene" uid="uid://8in0kohtaakk" path="res://scenes/Entities/SCN_BasicAI.tscn" id="3_ddmyt"]
+[ext_resource type="PackedScene" uid="uid://qho06u8uokdu" path="res://scenes/Entities/SCN_player.tscn" id="4_pwj6m"]
+[ext_resource type="Script" uid="uid://kotsn72dshgr" path="res://src/SCR_CameraController.gd" id="5_8k6qf"]
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_sugp2"]
+frustum_focal_length = 70.0
+
+[node name="main" type="Node" node_paths=PackedStringArray("Player")]
+script = ExtResource("1_x8bhv")
+Player = NodePath("Constant/SCN_Player")
+
+[node name="Map" type="Node" parent="."]
+
+[node name="Level Blockout" parent="Map" instance=ExtResource("2_e8umy")]
+
+[node name="CharacterBody3D" parent="Map" node_paths=PackedStringArray("WaypointContainer") instance=ExtResource("3_ddmyt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82254, 0.0999999, 0.00914372)
+RunSpeed = 1.0
+WaypointContainer = NodePath("../Scientist_1_waypoints")
+
+[node name="Scientist_1_waypoints" type="Node" parent="Map"]
+
+[node name="Node3D" type="Node3D" parent="Map/Scientist_1_waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.76622, 0.0877588, 0)
+
+[node name="Node3D2" type="Node3D" parent="Map/Scientist_1_waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.23378, 0.0877588, 0)
+
+[node name="Constant" type="Node" parent="."]
+
+[node name="SCN_Player" parent="Constant" instance=ExtResource("4_pwj6m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+
+[node name="CameraCenter" type="Node3D" parent="Constant" node_paths=PackedStringArray("Target")]
+script = ExtResource("5_8k6qf")
+Target = NodePath("../SCN_Player")
+
+[node name="Camera3D" type="Camera3D" parent="Constant/CameraCenter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.736018, 9.58215)
+cull_mask = 524287
+attributes = SubResource("CameraAttributesPhysical_sugp2")

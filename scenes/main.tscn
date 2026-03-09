@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cin6nekjwv650"]
+
+[ext_resource type="Script" uid="uid://dgltfnultimkg" path="res://src/RootManager.gd" id="1_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://sb3u5e7o208" path="res://scenes/ROOT_GAMEPLAY.tscn" id="2_jyhfs"]
+
+[node name="MAIN" type="Node"]
+script = ExtResource("1_tbgi4")
+
+[node name="ROOT" type="Node" parent="."]
+
+[node name="main" parent="ROOT" instance=ExtResource("2_jyhfs")]
+
+[node name="CONSTANT" type="Node" parent="."]

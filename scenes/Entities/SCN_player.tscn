@@ -1,0 +1,199 @@
+[gd_scene load_steps=17 format=3 uid="uid://qho06u8uokdu"]
+
+[ext_resource type="Texture2D" uid="uid://bsfbbt7th6ts0" path="res://icon.svg" id="1_1ydj1"]
+[ext_resource type="Script" uid="uid://bkovlted8cqbq" path="res://src/SCR_PlayerManager.gd" id="1_a5nvs"]
+[ext_resource type="Script" uid="uid://i882bce54l1p" path="res://src/SCR_LightDetector.gd" id="3_0pe33"]
+[ext_resource type="PackedScene" uid="uid://dcru33nyyiyrb" path="res://assets/models/characters/MDL_PlayerAlien.glb" id="4_2vuwj"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0wfyh"]
+radius = 0.175
+height = 0.5
+
+[sub_resource type="Environment" id="Environment_0pe33"]
+background_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_0pe33"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2vuwj"]
+animation = &"Walk1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_1mj4q"]
+animation = &"Jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5vy4e"]
+animation = &"AirLoop"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q3txb"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_3svhx"]
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_5vy4e"]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_1mj4q"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5vy4e"]
+graph_offset = Vector2(-599, 55)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_q3txb")
+nodes/Animation/position = Vector2(-580, -80)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_2vuwj")
+"nodes/Animation 2/position" = Vector2(-580, 80)
+"nodes/Animation 3/node" = SubResource("AnimationNodeAnimation_1mj4q")
+"nodes/Animation 3/position" = Vector2(200, 340)
+"nodes/Animation 4/node" = SubResource("AnimationNodeAnimation_5vy4e")
+"nodes/Animation 4/position" = Vector2(-460, 380)
+nodes/GroundAir/node = SubResource("AnimationNodeBlend2_3svhx")
+nodes/GroundAir/position = Vector2(-130.58, 162.82)
+nodes/JumpShot/node = SubResource("AnimationNodeOneShot_5vy4e")
+nodes/JumpShot/position = Vector2(382.46, 172.5)
+nodes/MovementBlend/node = SubResource("AnimationNodeBlend2_1mj4q")
+nodes/MovementBlend/position = Vector2(-440, -60)
+nodes/output/position = Vector2(860, 80)
+node_connections = [&"GroundAir", 0, &"MovementBlend", &"GroundAir", 1, &"Animation 4", &"JumpShot", 0, &"GroundAir", &"JumpShot", 1, &"Animation 3", &"MovementBlend", 0, &"Animation", &"MovementBlend", 1, &"Animation 2", &"output", 0, &"JumpShot"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2vuwj"]
+radius = 0.071956
+
+[node name="SCN_Player" type="CharacterBody3D" node_paths=PackedStringArray("ModelContainer", "AnimTree", "VisionGrabber", "LightDetection")]
+axis_lock_linear_z = true
+script = ExtResource("1_a5nvs")
+SPEED = 3.0
+ModelContainer = NodePath("MDL_PlayerAlien")
+AnimTree = NodePath("CharacterAnimTree")
+AnimSmoothness = 10.0
+VisionGrabber = NodePath("VisionGrabber")
+LightDetection = NodePath("SubViewportContainer/LightDetector")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.245546, 0)
+shape = SubResource("CapsuleShape3D_0wfyh")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(0.50225, 0, 0, 0, 0.380038, 0, 0, 0, 1, 0, 0.240566, 0)
+visible = false
+double_sided = false
+texture = ExtResource("1_1ydj1")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(27.01, 27.01)
+
+[node name="LightDetector" type="SubViewport" parent="SubViewportContainer" node_paths=PackedStringArray("AffectedSprite")]
+handle_input_locally = false
+debug_draw = 2
+size = Vector2i(2, 2)
+render_target_update_mode = 4
+script = ExtResource("3_0pe33")
+AffectedSprite = NodePath("../../Sprite3D")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/LightDetector"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+cull_mask = 524288
+environment = SubResource("Environment_0pe33")
+projection = 1
+size = 0.2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewportContainer/LightDetector/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.6761e-09, -0.221363)
+layers = 524288
+mesh = SubResource("QuadMesh_0pe33")
+skeleton = NodePath("../..")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+remote_path = NodePath("../SubViewportContainer/LightDetector/Camera3D")
+
+[node name="MDL_PlayerAlien" parent="." instance=ExtResource("4_2vuwj")]
+transform = Transform3D(-5.68248e-08, 0, 1.3, 0, 1.3, 0, -1.3, 0, -5.68248e-08, 0, 0, 0)
+
+[node name="Skeleton3D" parent="MDL_PlayerAlien/Armature" index="0"]
+bones/0/rotation = Quaternion(-0.686253, 0.194437, 0.194437, 0.673383)
+bones/1/rotation = Quaternion(0, 0.707107, 0.707107, 0)
+bones/2/position = Vector3(-0.154429, 0.0865788, 0.0652567)
+bones/2/rotation = Quaternion(0.269816, -0.583787, -0.0569702, 0.763641)
+bones/4/rotation = Quaternion(-0.686253, -0.194437, -0.194437, 0.673383)
+bones/7/position = Vector3(0, -0.0294845, 0.139176)
+bones/7/rotation = Quaternion(0.871094, 0, 0, 0.491116)
+bones/9/rotation = Quaternion(-0.101773, 0.559502, -0.429699, 0.701398)
+bones/10/rotation = Quaternion(0.301529, -0.0148151, -0.00184504, 0.95334)
+bones/11/rotation = Quaternion(-0.191768, 0.0145875, -0.0279896, 0.980933)
+bones/13/rotation = Quaternion(-6.64675e-09, 0.970656, -0.183443, 0.155484)
+bones/16/rotation = Quaternion(0.205163, -0.694728, 0.0124337, 0.68928)
+bones/18/rotation = Quaternion(0.250712, 0.698817, 0.0112127, 0.66983)
+bones/19/rotation = Quaternion(0.126282, 0, 0, 0.991994)
+bones/20/position = Vector3(-0.0713992, 0.038602, 0.132986)
+bones/20/rotation = Quaternion(2.43573e-08, 0.830358, 0.55723, 3.62961e-08)
+bones/21/position = Vector3(-0.0860058, 0.074463, 0.0214831)
+bones/23/rotation = Quaternion(-0.291346, 1.45085e-10, 4.06905e-11, 0.956618)
+bones/24/position = Vector3(0.000357676, 0.0415874, 0.0649466)
+bones/24/rotation = Quaternion(-2.36502e-08, 0.842403, 0.538849, -3.68226e-08)
+bones/25/position = Vector3(0.00171638, 0.0572768, 0.0631803)
+bones/25/rotation = Quaternion(-2.36502e-08, 0.842403, 0.538849, -3.68226e-08)
+bones/26/position = Vector3(-0.0170619, 0.0587563, 0.0584698)
+bones/27/position = Vector3(-0.0225006, 0.0281295, 0.0630066)
+bones/27/rotation = Quaternion(0.00353006, 0.842396, 0.538844, -0.00184762)
+bones/28/position = Vector3(-0.0451668, 0.0259867, 0.0426448)
+bones/28/rotation = Quaternion(0.00353021, 0.842397, 0.538843, -0.00184772)
+bones/29/position = Vector3(-0.0625329, 0.0591886, 0.00911648)
+bones/29/rotation = Quaternion(0.00353021, 0.842397, 0.538843, -0.00184772)
+bones/30/position = Vector3(-0.0040682, 0.104756, 0.0322423)
+bones/30/rotation = Quaternion(0.00353007, 0.842397, 0.538843, -0.00184762)
+bones/31/rotation = Quaternion(0.00352993, 0.842397, 0.538843, -0.00184752)
+bones/32/position = Vector3(-0.0199705, 0.107218, 0.025977)
+bones/32/rotation = Quaternion(0.00352993, 0.842397, 0.538843, -0.00184752)
+bones/33/position = Vector3(-0.00956119, 0.0623272, 0.0573177)
+bones/33/rotation = Quaternion(0.00353007, 0.842397, 0.538843, -0.00184762)
+bones/34/position = Vector3(0.0170619, 0.0587563, 0.0584698)
+bones/35/position = Vector3(0.0225006, 0.0281295, 0.0630066)
+bones/35/rotation = Quaternion(-0.00353006, 0.842396, 0.538844, 0.00184762)
+bones/36/position = Vector3(0.0451668, 0.0259867, 0.0426448)
+bones/36/rotation = Quaternion(-0.00353021, 0.842397, 0.538843, 0.00184772)
+bones/37/position = Vector3(0.0625329, 0.0591886, 0.00911647)
+bones/38/position = Vector3(0.0040682, 0.104756, 0.0322423)
+bones/40/position = Vector3(0.0199705, 0.107218, 0.025977)
+bones/41/position = Vector3(0.00956119, 0.0623272, 0.0573177)
+bones/43/rotation = Quaternion(0.834905, -0.545815, -0.0589863, -0.0392421)
+bones/44/rotation = Quaternion(-0.531379, 0.0546259, 0.570355, 0.623977)
+bones/45/rotation = Quaternion(0.0913092, 0.398268, 0.314851, 0.856688)
+bones/52/rotation = Quaternion(0.834905, 0.545815, 0.0589863, -0.0392422)
+bones/53/rotation = Quaternion(-0.531379, -0.0546259, -0.570355, 0.623977)
+bones/54/rotation = Quaternion(0.0913092, -0.398268, -0.314851, 0.856688)
+bones/55/rotation = Quaternion(-0.172662, 0.85157, -0.479089, -0.124459)
+bones/63/position = Vector3(0.0486008, 0.038602, 0.132986)
+bones/63/rotation = Quaternion(2.43573e-08, 0.830358, 0.55723, 3.62961e-08)
+bones/65/rotation = Quaternion(-0.101773, -0.559502, 0.429699, 0.701398)
+bones/66/rotation = Quaternion(0.301529, 0.0148151, 0.00184504, 0.95334)
+bones/67/rotation = Quaternion(-0.191768, -0.0145874, 0.0279896, 0.980933)
+bones/69/rotation = Quaternion(9.82916e-09, 0.970656, -0.183443, -0.155484)
+bones/72/rotation = Quaternion(0.205163, 0.694728, -0.0124337, 0.68928)
+bones/74/rotation = Quaternion(0.250711, -0.698817, -0.0112127, 0.66983)
+bones/75/rotation = Quaternion(0, 0.707107, 0.707107, 0)
+bones/76/position = Vector3(0.154429, 0.0865788, 0.0652567)
+bones/76/rotation = Quaternion(0.269816, 0.583787, 0.0569702, 0.763641)
+
+[node name="AnimationPlayer" parent="MDL_PlayerAlien" index="1"]
+autoplay = "Idle"
+
+[node name="CharacterAnimTree" type="AnimationTree" parent="."]
+root_node = NodePath("../MDL_PlayerAlien")
+tree_root = SubResource("AnimationNodeBlendTree_5vy4e")
+anim_player = NodePath("../MDL_PlayerAlien/AnimationPlayer")
+parameters/GroundAir/blend_amount = 1.0
+parameters/JumpShot/active = false
+parameters/JumpShot/internal_active = false
+parameters/JumpShot/request = 0
+parameters/MovementBlend/blend_amount = 1.0
+
+[node name="VisionGrabber" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.234437, 0)
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VisionGrabber"]
+shape = SubResource("SphereShape3D_2vuwj")
+
+[connection signal="VisibilityChanged" from="SubViewportContainer/LightDetector" to="." method="_on_light_detector_visibility_changed"]
+
+[editable path="MDL_PlayerAlien"]
