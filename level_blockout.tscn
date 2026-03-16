@@ -1,21 +1,6 @@
-[gd_scene load_steps=41 format=3 uid="uid://3n2q5dbpqu6m"]
+[gd_scene load_steps=38 format=3 uid="uid://3n2q5dbpqu6m"]
 
 [ext_resource type="Script" uid="uid://jnoqf45u34yg" path="res://src/SCR_Ladder.gd" id="1_jjb6j"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ec7tp"]
-sky_top_color = Color(0, 0, 0, 1)
-sky_horizon_color = Color(0, 0, 0, 1)
-ground_bottom_color = Color(0, 0, 0, 1)
-
-[sub_resource type="Sky" id="Sky_jjb6j"]
-sky_material = SubResource("ProceduralSkyMaterial_ec7tp")
-
-[sub_resource type="Environment" id="Environment_ithvx"]
-background_mode = 2
-sky = SubResource("Sky_jjb6j")
-ambient_light_color = Color(1, 1, 1, 1)
-tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_ec7tp"]
 
@@ -124,9 +109,6 @@ data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0
 size = Vector3(0.383789, 3.29187, 1.6853)
 
 [node name="Level Blockout" type="Node3D"]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_ithvx")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(5.55, 0, 0, 0, 0.2, 0, 0, 0, 1.63885, 0, 0, 0)

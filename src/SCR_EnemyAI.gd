@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-var CurrentSpeed = 1.0
+@export var CurrentSpeed = 1.0
 @export var MoveSpeed = 1.0
 @export var RunSpeed = 1.0
 const JUMP_VELOCITY = 4.5
@@ -24,147 +24,101 @@ var DirectionVelocity:Vector3
 @export var IdleTime:float
 var IdleTimer:Timer
 
-enum ENEMYSTATE{IDLE,MOVING,ATTACKING}
-var EnemyState:ENEMYSTATE = ENEMYSTATE.MOVING
+enum MOVESTATE{IDLE,MOVING,ATTACKING}
+var MovementState:MOVESTATE = MOVESTATE.MOVING
 
-var IsRunning:bool = false
-
-var ChasingPlayer:bool = false
 var PlayerInProximity:bool = false
-var HasSightOfPlayer:bool = false
-
-var CurrentTarget:Vector3
+var ChasingPlayer:bool = false
 
 @export var VisionArea:Area3D
+@export var NavAgent:NavigationAgent3D
+
+var TrackingTimer:Timer
+@export var TimeToLoseTrack:float
 
 func _ready() -> void:
-	IdleTimer = Timer.new()
-	add_child(IdleTimer)
-	IdleTimer.wait_time = IdleTime
-	IdleTimer.connect("timeout",EndIdle)
-	IdleTimer.one_shot = true
+	TrackingTimer = Timer.new()
+	TrackingTimer.wait_time = TimeToLoseTrack
+	TrackingTimer.one_shot = false
+	add_child(TrackingTimer)
+	TrackingTimer.timeout.connect(LoseTrackOfPlayer)
 	
 	Waypoints.append_array(WaypointContainer.get_children())
-	
-	CurrentTarget = Waypoints[0].global_position
-	DetermineWaypointDirection()
+	UpdateAITarget(Waypoints[0])
 
 func _physics_process(delta: float) -> void:
-	if PlayerInProximity and !HasSightOfPlayer and GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible:
-		if GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible:
-			PlayerSpotted()
-		pass
+	
+	if PlayerInProximity and !ChasingPlayer and GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible:
+		ChasingPlayer = true
+	
 	if ChasingPlayer:
-		DetermineWaypointDirection()
-	else:
-		match EnemyState:
-			ENEMYSTATE.IDLE:
-				pass
-			ENEMYSTATE.MOVING:
-				if global_position.distance_to(CurrentTarget) < 0.2:
-					WaypointReached()
-					
-	velocity = DirectionVelocity
+		UpdateAITarget(GAMEMANAGER.CURRENTROOT.Player)
+	
+	var next_path_position: Vector3 = NavAgent.get_next_path_position()
+	var local_position = next_path_position - global_position
+	var direction = local_position.normalized() * MoveSpeed
+	NavAgent.velocity = direction
+	pass
+
+func NAV_SafeVelocityFound(_safe_Velocity:Vector3):
+	if _safe_Velocity == Vector3.ZERO:
+		return
+	velocity = _safe_Velocity
+	rotation.y = atan2(velocity.z,velocity.x)
 	move_and_slide()
 
-func DetermineAnimation():
-	if velocity == Vector3.ZERO:
-		AnimPlayer.play("Idle")
-	pass
+func GetNextPatrolPoint() -> Node3D:
+	WaypointID+=1
+	WaypointID = wrap(WaypointID,0,WaypointContainer.get_child_count())
+	print("Next patrol point is:: " + str(WaypointID))
+	return Waypoints[WaypointID]
 
-func SelectNextWaypoints():
-	if ChasingPlayer:
-		CurrentTarget = GAMEMANAGER.CURRENTROOT.Player.global_position
-	else:
-		WaypointID+=1
-		if WaypointID > Waypoints.size()-1:
-			WaypointID = 0
-		CurrentTarget = Waypoints[WaypointID].global_position
-		pass
-
-func DetermineWaypointDirection():
-	if CurrentTarget:
-		if global_position.direction_to(CurrentTarget).x > 0:
-			DirectionVelocity = Vector3.RIGHT * CurrentSpeed
-			rotation_degrees.y = 0.0
-		else:
-			DirectionVelocity = Vector3.LEFT * CurrentSpeed
-			rotation_degrees.y = 180.0
-		EnemyState = ENEMYSTATE.MOVING
-		CheckAnimationValue()
-
-func WaypointReached():
-	print("HIT WAYPOINT")
-	BeginIdle()
-	velocity = Vector3.ZERO
-	pass
-
-func BeginIdle():
-	DirectionVelocity = Vector3.ZERO
-	EnemyState = ENEMYSTATE.IDLE
-	SetMoveSpeed(0.0)
-	IdleTimer.start()
-	
-func EndIdle():
-	SetMoveSpeed(MoveSpeed)
-	SelectNextWaypoints()
-	DetermineWaypointDirection()
-	print("FINISHING IDLE, BEGINNING MOVEMENT")
-	
 func PlayerSpotted():
-	print("PLAYER SPOTTED")
-	if HasSightOfPlayer:
-		return
-	PlayerInProximity = true
-	if GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible:
-		print("AND THEY ARE IN THE LIGHT >:D")
-		HasSightOfPlayer = true
-		SetMoveSpeed(0.0)
-		AnimTree["parameters/Spotted/request"] = AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE
-		await AnimTree.animation_finished
-		print("start chase")
-		SetMoveSpeed(RunSpeed)
-	pass
-	
-func LostPlayer():
-	PlayerInProximity = false
-	HasSightOfPlayer = false
-	CurrentTarget = GAMEMANAGER.CURRENTROOT.Player.global_position
-	print("WE LOST THE PLAYER")
 	pass
 
+func _on_vision_area_entered(area: Area3D) -> void:
+	if area.get_parent() is Playermanager:
+		PlayerInProximity = true
+		if GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible:
+			TrackingTimer.stop()
+	pass # Replace with function body.
+
+func _on_vision_area_exited(area: Area3D) -> void:
+	if area.get_parent() is Playermanager:
+		PlayerInProximity = false
+		TrackingTimer.start()
+		pass
+	pass # Replace with function body.
+
+func UpdateAITarget(_node:Node3D):
+	NavAgent.target_position = _node.global_position
+	print("TARGET POSITION SET")
+	
+func SetMoveSpeed(_amount:float):
+	CurrentSpeed = _amount
+	CheckAnimationValue()
+
+func _on_nav_agent_target_reached() -> void:
+	print("TARGET_REACHED")
+	if !ChasingPlayer:
+		await get_tree().process_frame
+		UpdateAITarget(GetNextPatrolPoint())
+	pass # Replace with function body.
+	
 func CheckAnimationValue():
 	var Movetween = create_tween()
-	match EnemyState:
-		ENEMYSTATE.IDLE:
+	match MovementState:
+		MOVESTATE.IDLE:
 			Movetween.tween_property(AnimTree,"parameters/Blend3/blend_amount",0.0,0.2)
-		ENEMYSTATE.MOVING:
+		MOVESTATE.MOVING:
 			if CurrentSpeed == RunSpeed:
 				Movetween.tween_property(AnimTree,"parameters/Blend3/blend_amount",1.0,0.2)
 			else:
 				Movetween.tween_property(AnimTree,"parameters/Blend3/blend_amount",-1.0,0.2)
 
-func _on_vision_area_entered(area: Area3D) -> void:
-	if area.get_parent() is Playermanager:
-		PlayerSpotted()
-	pass # Replace with function body.
-
-func _on_vision_area_exited(area: Area3D) -> void:
-	if area.get_parent() is Playermanager:
-		LostPlayer()
-	pass # Replace with function body.
-
-
-func AITick() -> void:
-	match EnemyState:
-		ENEMYSTATE.IDLE:
-			return
-		ENEMYSTATE.MOVING:
-			if ChasingPlayer:
-				CurrentTarget = GAMEMANAGER.CURRENTROOT.Player.global_position
-			DetermineWaypointDirection()
-	pass # Replace with function body.
-
-func SetMoveSpeed(_amount:float):
-	CurrentSpeed = _amount
-	CheckAnimationValue()
+func LoseTrackOfPlayer():
+	print("LOST HIM")
+	ChasingPlayer = false
+	await get_tree().process_frame
+	UpdateAITarget(GetNextPatrolPoint())
+	pass
