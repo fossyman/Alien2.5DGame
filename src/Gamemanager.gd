@@ -5,6 +5,9 @@ var ROOTCONTAINER:Node
 var CURRENTROOT:RootManager
 var CONSTANT:Node
 var delta:float
+
+enum FACTIONS{ALIEN,SCIENTIST,SOLDIER}
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	MAIN = get_tree().root.find_child("MAIN",true,false)

@@ -1,10 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://sb3u5e7o208"]
+[gd_scene load_steps=31 format=3 uid="uid://sb3u5e7o208"]
 
 [ext_resource type="Script" uid="uid://dgltfnultimkg" path="res://src/RootManager.gd" id="1_x8bhv"]
 [ext_resource type="PackedScene" uid="uid://3n2q5dbpqu6m" path="res://level_blockout.tscn" id="2_e8umy"]
 [ext_resource type="PackedScene" uid="uid://8in0kohtaakk" path="res://scenes/Entities/SCN_BasicAI.tscn" id="3_ddmyt"]
 [ext_resource type="PackedScene" uid="uid://qho06u8uokdu" path="res://scenes/Entities/SCN_player.tscn" id="4_pwj6m"]
 [ext_resource type="Script" uid="uid://kotsn72dshgr" path="res://src/SCR_CameraController.gd" id="5_8k6qf"]
+[ext_resource type="Texture2D" uid="uid://bof712aulk4yc" path="res://assets/textures/Poster Ideafinished.png" id="6_e8umy"]
+[ext_resource type="Texture2D" uid="uid://kx672ctpn447" path="res://assets/textures/SoldierPosterFinished.png" id="7_ddmyt"]
+[ext_resource type="Shader" uid="uid://bu1g05hidrvqd" path="res://assets/shaders/SHD_Scanner.gdshader" id="8_8k6qf"]
+[ext_resource type="PackedScene" uid="uid://sb3ykvx3kr03" path="res://assets/models/ScannerIndicator.glb" id="8_pwj6m"]
+[ext_resource type="Shader" uid="uid://b3ggfa3bma7qi" path="res://assets/shaders/SHD_TV.gdshader" id="10_am4xa"]
+[ext_resource type="Texture2D" uid="uid://dngp2pklu86jo" path="res://assets/textures/ScientistProfile.png" id="11_70dto"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x8bhv"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -16,6 +22,8 @@ sky_material = SubResource("ProceduralSkyMaterial_x8bhv")
 [sub_resource type="Environment" id="Environment_ddmyt"]
 background_mode = 2
 sky = SubResource("Sky_e8umy")
+ambient_light_source = 1
+reflected_light_source = 1
 tonemap_mode = 2
 glow_enabled = true
 
@@ -28,6 +36,73 @@ agent_max_climb = 0.0
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_sugp2"]
 frustum_focal_length = 70.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_e8umy"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ddmyt"]
+as_normal_map = true
+bump_strength = 0.6
+noise = SubResource("FastNoiseLite_e8umy")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddmyt"]
+albedo_texture = ExtResource("6_e8umy")
+normal_scale = 16.0
+normal_texture = SubResource("NoiseTexture2D_ddmyt")
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_pwj6m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pwj6m"]
+albedo_texture = ExtResource("7_ddmyt")
+normal_scale = 16.0
+normal_texture = SubResource("NoiseTexture2D_ddmyt")
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ddmyt"]
+
+[sub_resource type="Gradient" id="Gradient_8k6qf"]
+offsets = PackedFloat32Array(0, 0.179104, 0.549254, 1)
+colors = PackedColorArray(1, 1, 1, 0, 0.22, 0.22, 0.22, 0.47451, 1, 1, 1, 1, 1, 1, 1, 0.0196078)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_am4xa"]
+gradient = SubResource("Gradient_8k6qf")
+repeat = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_am4xa"]
+render_priority = 0
+shader = ExtResource("8_8k6qf")
+shader_parameter/Albedo = Color(1, 0, 0, 0.286275)
+shader_parameter/AlbedoTex = SubResource("GradientTexture2D_am4xa")
+shader_parameter/ScrollSpeed = Vector2(2, 0)
+shader_parameter/Scale = Vector2(10, 1)
+
+[sub_resource type="Gradient" id="Gradient_am4xa"]
+offsets = PackedFloat32Array(0.492537, 0.713433)
+colors = PackedColorArray(0.52, 0.52, 0.52, 0, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_70dto"]
+noise_type = 5
+frequency = 0.5134
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0jkyb"]
+width = 64
+height = 64
+color_ramp = SubResource("Gradient_am4xa")
+noise = SubResource("FastNoiseLite_70dto")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_70dto"]
+render_priority = 0
+shader = ExtResource("10_am4xa")
+shader_parameter/Albedo = Color(0.75, 1, 0.935547, 1)
+shader_parameter/NoiseAlbedo = Color(0.308594, 0.308594, 0.308594, 0)
+shader_parameter/Emission = 22.15
+shader_parameter/Noise = SubResource("NoiseTexture2D_0jkyb")
+shader_parameter/DisplayTexture = ExtResource("11_70dto")
+shader_parameter/ScrollSpeed = Vector2(5, 5)
+shader_parameter/Scale = Vector2(1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_0jkyb"]
 
 [node name="main" type="Node" node_paths=PackedStringArray("Player")]
 script = ExtResource("1_x8bhv")
@@ -68,3 +143,36 @@ Target = NodePath("../SCN_Player")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.736018, 9.58215)
 cull_mask = 524287
 attributes = SubResource("CameraAttributesPhysical_sugp2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.717181, 0, 0, 0, 1, 0, 0, 0, 1, -0.425156, 1.2979, -0.438594)
+material_override = SubResource("StandardMaterial3D_ddmyt")
+mesh = SubResource("QuadMesh_pwj6m")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.717181, 0, 0, 0, 1, 0, 0, 0, 1, 0.304951, 1.2979, -0.438594)
+material_override = SubResource("StandardMaterial3D_pwj6m")
+mesh = SubResource("QuadMesh_pwj6m")
+
+[node name="ScannerDoor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15228, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ScannerDoor"]
+transform = Transform3D(0.1, 0, 0, 0, 1, 0, 0, 0, 0.9, 0, 0.6, 0)
+mesh = SubResource("BoxMesh_ddmyt")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="ScannerDoor"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -0.432845, 0.702994, 0)
+
+[node name="ScannerIndicator" parent="ScannerDoor/MeshInstance3D2" instance=ExtResource("8_pwj6m")]
+transform = Transform3D(0.976398, -0.383896, 0, 0.21598, 1.73551, 0, 0, 0, 1, 0, 0.473998, 0)
+
+[node name="Cube" parent="ScannerDoor/MeshInstance3D2/ScannerIndicator" index="0"]
+material_override = SubResource("ShaderMaterial_am4xa")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="ScannerDoor"]
+transform = Transform3D(0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, -0.00201988, 0.69072, 0.457366)
+material_override = SubResource("ShaderMaterial_70dto")
+mesh = SubResource("QuadMesh_0jkyb")
+
+[editable path="ScannerDoor/MeshInstance3D2/ScannerIndicator"]

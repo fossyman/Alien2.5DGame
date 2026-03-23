@@ -26,6 +26,8 @@ var CurrentMesh:Node3D = AlienMesh
 @export var TransfromDistorterParent:Node3D
 @export var TransfromDistorters:Array[Node3D]
 
+@export var CurrentFaction:GAMEMANAGER.FACTIONS
+
 var IsGrounded:bool = true
 
 var MoveVal = 0.0
@@ -35,6 +37,9 @@ var VisceraTween:Tween
 
 func _ready() -> void:
 	CurrentMesh = AlienMesh
+	ChangeActiveMesh(AlienMesh)
+	SPEED = WALKSPEED
+	MoveVal = -1.0
 
 func _physics_process(delta: float) -> void:
 	
@@ -108,6 +113,7 @@ func ChangeActiveMesh(_node:Node3D):
 
 	match _node:
 		AlienMesh:
+			CurrentFaction = GAMEMANAGER.FACTIONS.ALIEN
 			TransfromDistorterParent.scale.y = 0
 			TransformTween.parallel().tween_property(TransfromDistorterParent,"scale:y",0.5,0.5)
 			AlienMesh.visible = true
@@ -123,6 +129,7 @@ func ChangeActiveMesh(_node:Node3D):
 			TransformTween.parallel().tween_property(ScientistMesh,"scale:y",0,0.5)
 			pass
 		ScientistMesh:
+			CurrentFaction = GAMEMANAGER.FACTIONS.SCIENTIST
 			TransfromDistorterParent.scale.y = 0
 			TransformTween.parallel().tween_property(TransfromDistorterParent,"scale:y",1.0,0.5)
 			AlienMesh.visible = true

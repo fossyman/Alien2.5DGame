@@ -16,6 +16,8 @@ enum WAYPOINTTYPE{WALLTOWALL,POINTS}
 @export var AnimPlayer:AnimationPlayer
 @export var AnimTree:AnimationTree
 
+@export var Faction:GAMEMANAGER.FACTIONS
+
 var Waypoints:Array[Node3D]
 var WaypointID:int = 0
 
@@ -48,7 +50,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	
-	if PlayerInProximity and !ChasingPlayer and GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible:
+	if PlayerInProximity and !ChasingPlayer and GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible and GAMEMANAGER.CURRENTROOT.Player.CurrentFaction == GAMEMANAGER.FACTIONS.ALIEN:
 		ChasingPlayer = true
 	
 	if ChasingPlayer:
@@ -79,6 +81,9 @@ func PlayerSpotted():
 func _on_vision_area_entered(area: Area3D) -> void:
 	if area.get_parent() is Playermanager:
 		PlayerInProximity = true
+		if GAMEMANAGER.CURRENTROOT.Player.CurrentFaction != GAMEMANAGER.FACTIONS.ALIEN:
+			TrackingTimer.start()
+			return
 		if GAMEMANAGER.CURRENTROOT.Player.LightDetection.IsVisible:
 			TrackingTimer.stop()
 	pass # Replace with function body.

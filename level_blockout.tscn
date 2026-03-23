@@ -563,8 +563,6 @@ mesh = SubResource("SphereMesh_ec7tp")
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2.5, 0)
 layers = 524289
 shadow_enabled = true
-spot_angle = 41.5995
-spot_angle_attenuation = 0.00390625
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 4.03957, 1.20089, 0)
@@ -702,13 +700,6 @@ shadow_enabled = true
 spot_range = 3.06312
 spot_angle = 64.2232
 spot_angle_attenuation = 0.00390625
-
-[node name="SpotLight3D10" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0343, 0)
-layers = 524289
-light_energy = 16.0
-spot_range = 214.351
-spot_angle_attenuation = 0.00209331
 
 [node name="Ladder" type="Area3D" parent="."]
 script = ExtResource("1_jjb6j")
