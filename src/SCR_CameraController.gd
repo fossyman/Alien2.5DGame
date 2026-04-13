@@ -1,4 +1,5 @@
 extends Node3D
+class_name CameraController
 
 @export var Target:Node3D
 
