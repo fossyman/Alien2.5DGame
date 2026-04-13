@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://sb3u5e7o208"]
+[gd_scene load_steps=37 format=3 uid="uid://sb3u5e7o208"]
 
 [ext_resource type="Script" uid="uid://dgltfnultimkg" path="res://src/RootManager.gd" id="1_x8bhv"]
 [ext_resource type="PackedScene" uid="uid://3n2q5dbpqu6m" path="res://level_blockout.tscn" id="2_e8umy"]
@@ -7,10 +7,15 @@
 [ext_resource type="Script" uid="uid://kotsn72dshgr" path="res://src/SCR_CameraController.gd" id="5_8k6qf"]
 [ext_resource type="Texture2D" uid="uid://bof712aulk4yc" path="res://assets/textures/Poster Ideafinished.png" id="6_e8umy"]
 [ext_resource type="Texture2D" uid="uid://kx672ctpn447" path="res://assets/textures/SoldierPosterFinished.png" id="7_ddmyt"]
+[ext_resource type="Script" uid="uid://20nin5pfdd40" path="res://src/SCR_ScannerDoor.gd" id="8_0jkyb"]
 [ext_resource type="Shader" uid="uid://bu1g05hidrvqd" path="res://assets/shaders/SHD_Scanner.gdshader" id="8_8k6qf"]
 [ext_resource type="PackedScene" uid="uid://sb3ykvx3kr03" path="res://assets/models/ScannerIndicator.glb" id="8_pwj6m"]
+[ext_resource type="AudioStream" uid="uid://c3oxaxe5uiqg6" path="res://assets/Audio/SFX/ScannerDoor/SCANNER_SUCCESS.ogg" id="10_52xvo"]
 [ext_resource type="Shader" uid="uid://b3ggfa3bma7qi" path="res://assets/shaders/SHD_TV.gdshader" id="10_am4xa"]
 [ext_resource type="Texture2D" uid="uid://dngp2pklu86jo" path="res://assets/textures/ScientistProfile.png" id="11_70dto"]
+[ext_resource type="AudioStream" uid="uid://jr1c6wewfrj7" path="res://assets/Audio/SFX/ScannerDoor/SCANNER_FAIL.ogg" id="11_86p5v"]
+[ext_resource type="AudioStream" uid="uid://b6yr7mowkri64" path="res://assets/Audio/SFX/ScannerDoor/SCANNER_SCANNING.ogg" id="13_rcl8w"]
+[ext_resource type="PackedScene" uid="uid://bpllp8cdpux1k" path="res://assets/models/characters/MDL_Soldier.glb" id="16_86p5v"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x8bhv"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -58,24 +63,6 @@ normal_scale = 16.0
 normal_texture = SubResource("NoiseTexture2D_ddmyt")
 texture_filter = 0
 
-[sub_resource type="BoxMesh" id="BoxMesh_ddmyt"]
-
-[sub_resource type="Gradient" id="Gradient_8k6qf"]
-offsets = PackedFloat32Array(0, 0.179104, 0.549254, 1)
-colors = PackedColorArray(1, 1, 1, 0, 0.22, 0.22, 0.22, 0.47451, 1, 1, 1, 1, 1, 1, 1, 0.0196078)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_am4xa"]
-gradient = SubResource("Gradient_8k6qf")
-repeat = 1
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_am4xa"]
-render_priority = 0
-shader = ExtResource("8_8k6qf")
-shader_parameter/Albedo = Color(1, 0, 0, 0.286275)
-shader_parameter/AlbedoTex = SubResource("GradientTexture2D_am4xa")
-shader_parameter/ScrollSpeed = Vector2(2, 0)
-shader_parameter/Scale = Vector2(10, 1)
-
 [sub_resource type="Gradient" id="Gradient_am4xa"]
 offsets = PackedFloat32Array(0.492537, 0.713433)
 colors = PackedColorArray(0.52, 0.52, 0.52, 0, 1, 1, 1, 1)
@@ -94,7 +81,7 @@ noise = SubResource("FastNoiseLite_70dto")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_70dto"]
 render_priority = 0
 shader = ExtResource("10_am4xa")
-shader_parameter/Albedo = Color(0.75, 1, 0.935547, 1)
+shader_parameter/Albedo = Color(0.8, 0.8, 1, 1)
 shader_parameter/NoiseAlbedo = Color(0.308594, 0.308594, 0.308594, 0)
 shader_parameter/Emission = 22.15
 shader_parameter/Noise = SubResource("NoiseTexture2D_0jkyb")
@@ -102,7 +89,29 @@ shader_parameter/DisplayTexture = ExtResource("11_70dto")
 shader_parameter/ScrollSpeed = Vector2(5, 5)
 shader_parameter/Scale = Vector2(1, 1)
 
+[sub_resource type="BoxMesh" id="BoxMesh_ddmyt"]
+
+[sub_resource type="Gradient" id="Gradient_8k6qf"]
+offsets = PackedFloat32Array(0, 0.179104, 0.549254, 1)
+colors = PackedColorArray(1, 1, 1, 0, 0.22, 0.22, 0.22, 0.47451, 1, 1, 1, 1, 1, 1, 1, 0.0196078)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_am4xa"]
+gradient = SubResource("Gradient_8k6qf")
+repeat = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_am4xa"]
+render_priority = 0
+shader = ExtResource("8_8k6qf")
+shader_parameter/Albedo = Color(0, 0, 0, 1)
+shader_parameter/alpha = 0.2
+shader_parameter/AlbedoTex = SubResource("GradientTexture2D_am4xa")
+shader_parameter/ScrollSpeed = Vector2(2, 0)
+shader_parameter/Scale = Vector2(10, 1)
+
 [sub_resource type="QuadMesh" id="QuadMesh_0jkyb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_70dto"]
+size = Vector3(1.02026, 1.8136, 1.91113)
 
 [node name="main" type="Node" node_paths=PackedStringArray("Player")]
 script = ExtResource("1_x8bhv")
@@ -154,25 +163,114 @@ transform = Transform3D(0.717181, 0, 0, 0, 1, 0, 0, 0, 1, 0.304951, 1.2979, -0.4
 material_override = SubResource("StandardMaterial3D_pwj6m")
 mesh = SubResource("QuadMesh_pwj6m")
 
-[node name="ScannerDoor" type="Node3D" parent="."]
+[node name="ScannerDoor" type="Node3D" parent="." node_paths=PackedStringArray("ScannerParent", "ScannerMesh", "DoorSFXPlayer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15228, 0, 0)
+script = ExtResource("8_0jkyb")
+ScannerParent = NodePath("MeshInstance3D2/ScannerIndicator")
+ScannerMesh = NodePath("MeshInstance3D2/ScannerIndicator/Cube")
+ScannerScreen = SubResource("ShaderMaterial_70dto")
+DoorSFXPlayer = NodePath("AudioStreamPlayer3D")
+ScanningSFX = ExtResource("13_rcl8w")
+SuccessSFX = ExtResource("10_52xvo")
+FailSFX = ExtResource("11_86p5v")
+CheckedFaction = 1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ScannerDoor"]
 transform = Transform3D(0.1, 0, 0, 0, 1, 0, 0, 0, 0.9, 0, 0.6, 0)
 mesh = SubResource("BoxMesh_ddmyt")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="ScannerDoor"]
-transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -0.432845, 0.702994, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0808362, 1.0018, 0)
 
 [node name="ScannerIndicator" parent="ScannerDoor/MeshInstance3D2" instance=ExtResource("8_pwj6m")]
-transform = Transform3D(0.976398, -0.383896, 0, 0.21598, 1.73551, 0, 0, 0, 1, 0, 0.473998, 0)
 
 [node name="Cube" parent="ScannerDoor/MeshInstance3D2/ScannerIndicator" index="0"]
+transform = Transform3D(0.707107, 1.38239, 0, -0.707107, 1.38239, 0, 0, 0, 1, 0, 0, 0)
 material_override = SubResource("ShaderMaterial_am4xa")
+surface_material_override/0 = SubResource("ShaderMaterial_am4xa")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="ScannerDoor"]
 transform = Transform3D(0.23, 0, 0, 0, 0.23, 0, 0, 0, 0.23, -0.00201988, 0.69072, 0.457366)
 material_override = SubResource("ShaderMaterial_70dto")
 mesh = SubResource("QuadMesh_0jkyb")
 
+[node name="ScannerArea" type="Area3D" parent="ScannerDoor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ScannerDoor/ScannerArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.511597, 0.406799, -0.0600258)
+shape = SubResource("BoxShape3D_70dto")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="ScannerDoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.617936, 9.51075)
+stream = ExtResource("13_rcl8w")
+attenuation_model = 3
+max_distance = 5.0
+emission_angle_enabled = true
+parameters/looping = false
+
+[node name="MDL_Soldier" parent="." instance=ExtResource("16_86p5v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.919242, 0.1, -0.176721)
+
+[node name="Skeleton3D" parent="MDL_Soldier/SoldierArmature" index="0"]
+bones/0/position = Vector3(0.0489719, 0.06, 0.190609)
+bones/0/rotation = Quaternion(0.054709, 0, 0.998502, 0)
+bones/1/position = Vector3(0.0195101, 0.217628, 0.37013)
+bones/2/position = Vector3(0.213413, 0.581429, 0.0434027)
+bones/3/position = Vector3(-0.0389403, 0.421136, 0.152867)
+bones/3/rotation = Quaternion(0.416939, -0.228588, 0.532331, 0.700381)
+bones/4/position = Vector3(-0.0573641, 0.0640784, -0.187784)
+bones/4/rotation = Quaternion(-0.0469623, 0, 0.998897, 0)
+bones/5/position = Vector3(-0.105433, 0.226635, 0.367819)
+bones/6/position = Vector3(-0.164317, 0.359954, -0.0380616)
+bones/7/position = Vector3(-0.121145, 0.472818, 0.0158803)
+bones/7/rotation = Quaternion(-0.165962, 0.611625, 0.742499, -0.216951)
+bones/8/position = Vector3(0, 0.407868, -0.0257142)
+bones/8/rotation = Quaternion(-0.567674, -0.262412, -0.203833, 0.753218)
+bones/9/rotation = Quaternion(0.0651534, 0.786906, 0.612237, -0.0412231)
+bones/10/rotation = Quaternion(0.0079933, -1.72547e-08, -3.05088e-09, 0.999968)
+bones/11/rotation = Quaternion(-0.154598, 0.0170998, 0.108599, 0.981842)
+bones/13/position = Vector3(0.0085821, -0.00856641, -0.0167985)
+bones/13/rotation = Quaternion(-0.753246, -0.217446, 0.618003, 0.0583963)
+bones/14/rotation = Quaternion(0.495416, 0.00983078, -0.452884, 0.74119)
+bones/15/rotation = Quaternion(0.0372689, -0.845549, -0.183508, 0.499984)
+bones/16/position = Vector3(0.00655491, 0.0371306, 0.00605986)
+bones/16/rotation = Quaternion(-0.04203, 0.904613, -0.0201689, 0.423676)
+bones/17/rotation = Quaternion(0.618012, 0.0156998, 0.0327889, 0.785328)
+bones/18/rotation = Quaternion(-0.146747, 0.0459761, 0.0230732, 0.987836)
+bones/19/rotation = Quaternion(0.00397997, 0.362087, -0.547911, 0.754103)
+bones/20/position = Vector3(0.01522, 0.0158932, 0.00732135)
+bones/20/rotation = Quaternion(-0.0895234, 0.202857, -0.33274, 0.91658)
+bones/21/rotation = Quaternion(-0.0589695, -0.165065, 0.255048, 0.950908)
+bones/22/rotation = Quaternion(0.00229911, 0.00390383, -0.00642037, 0.999969)
+bones/23/position = Vector3(0.0802854, 0.0593452, -0.0250141)
+bones/23/rotation = Quaternion(-0.141123, 0.459762, 0.546759, 0.685389)
+bones/24/rotation = Quaternion(0.800828, -0.386453, 0.457353, -0.012531)
+bones/25/rotation = Quaternion(0.549787, -0.00884877, 0.502585, 0.667132)
+bones/26/rotation = Quaternion(0.245139, 0.0778882, 0.166565, 0.951891)
+bones/27/rotation = Quaternion(0.0420301, 0.904613, -0.020169, -0.423676)
+bones/28/rotation = Quaternion(0.124987, 0.0251085, 0.0434908, 0.990887)
+bones/29/rotation = Quaternion(-0.264776, -0.101796, 0.251913, 0.925241)
+bones/30/rotation = Quaternion(-0.12058, -0.0491264, 0.785221, 0.605371)
+bones/36/rotation = Quaternion(0.114315, -0.116506, -0.0643729, 0.984487)
+bones/42/rotation = Quaternion(0.621403, -0.444017, -0.444179, -0.468415)
+bones/48/rotation = Quaternion(0.621403, 0.444017, 0.444179, -0.468415)
+bones/49/position = Vector3(0.048, -0.0261779, -3.23901e-08)
+bones/49/rotation = Quaternion(0.0785287, -0.230774, 0.914081, -0.324086)
+bones/50/rotation = Quaternion(-0.435441, 0.0113718, -0.0873819, 0.895894)
+bones/51/rotation = Quaternion(0.0276203, -0.108118, -0.0122059, 0.993679)
+bones/53/rotation = Quaternion(0.471477, 1.53908e-08, 0.0251454, 0.88152)
+bones/54/position = Vector3(0.0556585, -0.0228132, 0.0392318)
+bones/54/rotation = Quaternion(4.09234e-07, -0.373749, 0.819104, 0.435179)
+bones/55/position = Vector3(-0.048, -0.0261779, 7.27822e-08)
+bones/55/rotation = Quaternion(0.267186, -0.548631, 0.781792, -0.128129)
+bones/56/rotation = Quaternion(-0.48101, -0.0110598, 0.0965264, 0.871315)
+bones/57/rotation = Quaternion(0.46958, -0.0180349, -0.0332759, 0.882078)
+bones/59/rotation = Quaternion(0.471477, -1.73288e-08, -0.0251454, 0.88152)
+bones/60/position = Vector3(-0.0556585, -0.0228132, 0.0392317)
+bones/60/rotation = Quaternion(-4.09234e-07, -0.373749, 0.819104, -0.435179)
+
+[connection signal="body_entered" from="ScannerDoor/ScannerArea" to="ScannerDoor" method="_on_scanner_area_body_entered"]
+[connection signal="body_exited" from="ScannerDoor/ScannerArea" to="ScannerDoor" method="_on_scanner_area_body_exited"]
+
 [editable path="ScannerDoor/MeshInstance3D2/ScannerIndicator"]
+[editable path="MDL_Soldier"]

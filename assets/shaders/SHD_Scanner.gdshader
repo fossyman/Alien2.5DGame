@@ -1,6 +1,7 @@
 shader_type spatial;
 render_mode unshaded;
-uniform vec4 Albedo:source_color;
+uniform vec3 Albedo:source_color;
+uniform float alpha = 0.2;
 uniform sampler2D AlbedoTex:filter_nearest;
 
 uniform vec2 ScrollSpeed;
@@ -12,5 +13,5 @@ void fragment() {
 	vec4 albedo = texture(AlbedoTex,(UV*Scale)+(TIME*ScrollSpeed));
 	
 	ALBEDO = albedo.rgb * Albedo.rgb;
-	ALPHA = Albedo.a;
+	ALPHA = alpha;
 }
