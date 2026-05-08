@@ -9,9 +9,9 @@ uniform vec2 Scale = vec2(1.0);
 
 
 void fragment() {
-	
+
 	vec4 albedo = texture(AlbedoTex,(UV*Scale)+(TIME*ScrollSpeed));
-	
+
 	ALBEDO = albedo.rgb * Albedo.rgb;
 	ALPHA = alpha;
 }

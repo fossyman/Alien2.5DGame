@@ -1,0 +1,114 @@
+[gd_scene load_steps=10 format=3 uid="uid://cddoe53sx3qv2"]
+
+[ext_resource type="Script" uid="uid://b6h5kwyuxivk5" path="res://src/SCR_SwingingLight.gd" id="1_yt4u8"]
+[ext_resource type="PackedScene" uid="uid://08371vaehhbe" path="res://assets/models/Light_1.glb" id="2_ka5sn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_h0nkm"]
+size = Vector3(0.1, 20, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yt4u8"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ka5sn"]
+material = SubResource("StandardMaterial3D_yt4u8")
+radius = 0.1
+height = 0.2
+radial_segments = 8
+rings = 7
+
+[sub_resource type="Animation" id="Animation_ka5sn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_yt4u8"]
+resource_name = "new_animation"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0666665, 0.266667, 0.433333, 0.566667, 0.766667, 0.85, 0.916667, 1.11667, 1.28333, 1.41667, 1.61667, 1.87, 1.93667, 2.13667, 2.30333, 2.43667, 2.63667, 2.72, 2.78667, 2.98667, 3.15333, 3.28667, 3.48667, 3.65, 3.71667, 3.91667, 4.08333, 4.21667, 4.41667, 4.5, 4.56667, 4.73333, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [1.0, 0.8, 1.0, 0.5, 0.9, 0.6, 1.0, 0.8, 1.0, 0.5, 0.9, 0.6, 1.0, 0.8, 1.0, 0.5, 0.9, 0.6, 1.0, 0.8, 1.0, 0.5, 0.9, 0.6, 1.0, 0.8, 1.0, 0.5, 0.9, 0.6, 1.0, 0.8, 0.7, 1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h0nkm"]
+_data = {
+&"RESET": SubResource("Animation_ka5sn"),
+&"new_animation": SubResource("Animation_yt4u8")
+}
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yt4u8"]
+radius = 0.1
+
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("SwingPoint", "LampHead")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+script = ExtResource("1_yt4u8")
+Freq = 5.0
+Amp = 2.0
+SwingPoint = NodePath("Node3D")
+LampHead = NodePath("Node3D/Light")
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(0.998366, -0.0571512, 0, 0.0571512, 0.998366, 0, 0, 0, 1, 0, 20, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+mesh = SubResource("BoxMesh_h0nkm")
+skeleton = NodePath("../..")
+
+[node name="Light" type="Node3D" parent="Node3D"]
+transform = Transform3D(0.998366, 0.0571512, 0, -0.0571512, 0.998366, 0, 0, 0, 1, 0, -20.005, 0)
+
+[node name="Light_1" parent="Node3D/Light" instance=ExtResource("2_ka5sn")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, -0.295, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Node3D/Light/Light_1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.795, 0)
+light_color = Color(0.753906, 1, 0.901947, 1)
+shadow_enabled = true
+spot_range = 14.5312
+spot_angle_attenuation = 0.00340059
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D/Light/Light_1/SpotLight3D"]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_ka5sn")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Node3D/Light/Light_1/SpotLight3D/MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+light_color = Color(0.336, 0.48, 0.4152, 1)
+light_energy = 0.1
+omni_range = 0.341
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Node3D/Light/Light_1/SpotLight3D"]
+libraries = {
+&"": SubResource("AnimationLibrary_h0nkm")
+}
+autoplay = "new_animation"
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Node3D/Light/Light_1/SpotLight3D"]
+transform = Transform3D(1, 8.74228e-08, -8.74228e-08, 8.74228e-08, -1, 8.74228e-08, -8.74228e-08, -8.74228e-08, -1, 0, 0, 0)
+shape = SubResource("SphereShape3D_yt4u8")
+spring_length = 7.39
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Node3D/Light/Light_1/SpotLight3D/SpringArm3D"]
+light_color = Color(0.113281, 0.113281, 0.113281, 1)
+omni_range = 1.0
+omni_attenuation = -2.542

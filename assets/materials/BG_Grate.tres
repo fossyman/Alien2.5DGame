@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bw7hyokhkjcy7"]
+
+[ext_resource type="Texture2D" uid="uid://t5ir7j4kppv2" path="res://assets/textures/GrateFloor.png" id="1_sufhq"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_sufhq")
+uv1_scale = Vector3(0.2, 0.2, 0.2)
+uv1_triplanar = true

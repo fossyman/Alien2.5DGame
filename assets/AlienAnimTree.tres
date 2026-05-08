@@ -1,0 +1,67 @@
+[gd_resource type="AnimationNodeBlendTree" load_steps=14 format=3 uid="uid://b754qscdlobli"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2vuwj"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_1mj4q"]
+animation = &"Jump"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5vy4e"]
+animation = &"AirLoop"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3svhx"]
+animation = &"Run"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2dio5"]
+animation = &"Climb"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_710s7"]
+animation = &"Climb"
+play_mode = 1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_gelw0"]
+animation = &"Climb_IDLE"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q3txb"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeBlend3" id="AnimationNodeBlend3_51uf2"]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_3svhx"]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_cpf3p"]
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_5vy4e"]
+
+[sub_resource type="AnimationNodeBlend3" id="AnimationNodeBlend3_ue0j2"]
+
+[resource]
+graph_offset = Vector2(-576.171, -284.338)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_q3txb")
+nodes/Animation/position = Vector2(-660, -260)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_2vuwj")
+"nodes/Animation 2/position" = Vector2(-660, -100)
+"nodes/Animation 3/node" = SubResource("AnimationNodeAnimation_1mj4q")
+"nodes/Animation 3/position" = Vector2(200, 340)
+"nodes/Animation 4/node" = SubResource("AnimationNodeAnimation_5vy4e")
+"nodes/Animation 4/position" = Vector2(-460, 380)
+"nodes/Animation 5/node" = SubResource("AnimationNodeAnimation_3svhx")
+"nodes/Animation 5/position" = Vector2(-660, 60)
+"nodes/Animation 6/node" = SubResource("AnimationNodeAnimation_2dio5")
+"nodes/Animation 6/position" = Vector2(-440, -560)
+"nodes/Animation 7/node" = SubResource("AnimationNodeAnimation_710s7")
+"nodes/Animation 7/position" = Vector2(-400, -220)
+"nodes/Animation 8/node" = SubResource("AnimationNodeAnimation_gelw0")
+"nodes/Animation 8/position" = Vector2(-440, -380)
+nodes/ClimbBlend/node = SubResource("AnimationNodeBlend3_51uf2")
+nodes/ClimbBlend/position = Vector2(-200, -360)
+nodes/GroundAir/node = SubResource("AnimationNodeBlend2_3svhx")
+nodes/GroundAir/position = Vector2(-160, 200)
+nodes/IsClimbing/node = SubResource("AnimationNodeBlend2_cpf3p")
+nodes/IsClimbing/position = Vector2(40, -100)
+nodes/JumpShot/node = SubResource("AnimationNodeOneShot_5vy4e")
+nodes/JumpShot/position = Vector2(382.46, 172.5)
+nodes/MovementBlend/node = SubResource("AnimationNodeBlend3_ue0j2")
+nodes/MovementBlend/position = Vector2(-340, 100)
+nodes/output/position = Vector2(860, 80)
+node_connections = [&"ClimbBlend", 0, &"Animation 6", &"ClimbBlend", 1, &"Animation 8", &"ClimbBlend", 2, &"Animation 7", &"GroundAir", 0, &"MovementBlend", &"GroundAir", 1, &"Animation 4", &"IsClimbing", 0, &"GroundAir", &"IsClimbing", 1, &"ClimbBlend", &"JumpShot", 0, &"IsClimbing", &"JumpShot", 1, &"Animation 3", &"MovementBlend", 0, &"Animation 2", &"MovementBlend", 1, &"Animation", &"MovementBlend", 2, &"Animation 5", &"output", 0, &"JumpShot"]

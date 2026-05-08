@@ -8,7 +8,7 @@ extends Node3D
 @export var SuccessSFX:AudioStream
 @export var FailSFX:AudioStream
 @export var CheckedFaction:GAMEMANAGER.FACTIONS
-
+@export var Door:Node3D
 var isScanning:bool = false
 
 
@@ -53,6 +53,7 @@ func DecidePlayerValidity():
 		DoorSFXPlayer.play()
 		(ScannerMesh.get_surface_override_material(0) as ShaderMaterial).set_shader_parameter("Albedo", Vector3(0,1,0))
 		ScannerScreen["shader_parameter/Albedo"] = Vector3(0,1,0)
+		Door.queue_free()
 	else:
 		DoorSFXPlayer.stream = FailSFX
 		DoorSFXPlayer.play()

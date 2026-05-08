@@ -1,0 +1,88 @@
+[gd_scene load_steps=14 format=3 uid="uid://ccvjp8r8tat13"]
+
+[ext_resource type="Texture2D" uid="uid://d3i28ooqobpl1" path="res://assets/textures/Steam.png" id="1_rtlte"]
+[ext_resource type="Script" uid="uid://bfji63sir133d" path="res://src/SCR_SteamPipeEffect.gd" id="1_wc0j7"]
+[ext_resource type="AudioStream" uid="uid://cl1xnj2k3sqsp" path="res://assets/Audio/SFX/Steam Buildup.ogg" id="2_rtlte"]
+[ext_resource type="AudioStream" uid="uid://cmhi8kkx0kend" path="res://assets/Audio/SFX/Steam.ogg" id="3_y7gu4"]
+
+[sub_resource type="Curve" id="Curve_esxcb"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.329193, 1), 0.0, 0.0, 0, 0, Vector2(0.841615, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_7u60v"]
+curve = SubResource("Curve_esxcb")
+
+[sub_resource type="Curve" id="Curve_57w14"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 144), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_wc0j7"]
+curve = SubResource("Curve_57w14")
+
+[sub_resource type="Curve" id="Curve_rtlte"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.5, 0.9), 0.521213, 0.521213, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_y7gu4"]
+curve = SubResource("Curve_rtlte")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ykfj7"]
+angle_min = 1.00001
+angle_max = 1.00001
+angle_curve = SubResource("CurveTexture_wc0j7")
+spread = 15.341
+initial_velocity_min = 5.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 0.5
+scale_curve = SubResource("CurveTexture_y7gu4")
+alpha_curve = SubResource("CurveTexture_7u60v")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xexeg"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 0.541176)
+albedo_texture = ExtResource("1_rtlte")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_c7rcl"]
+material = SubResource("StandardMaterial3D_xexeg")
+
+[node name="Node3D" type="GPUParticles3D" node_paths=PackedStringArray("BuildupTime", "BlowoutTime", "BuildupSFX", "BlowoutSFX")]
+amount = 12
+lifetime = 0.3
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_ykfj7")
+draw_pass_1 = SubResource("QuadMesh_c7rcl")
+script = ExtResource("1_wc0j7")
+BuildupTime = NodePath("Buildup")
+BlowoutTime = NodePath("Blowout")
+BuildupSFX = NodePath("BuildSFX")
+BlowoutSFX = NodePath("BuildSFX/BlowSFX")
+
+[node name="BuildSFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_rtlte")
+max_distance = 10.0
+
+[node name="BlowSFX" type="AudioStreamPlayer3D" parent="BuildSFX"]
+stream = ExtResource("3_y7gu4")
+max_distance = 10.0
+attenuation_filter_db = 0.0
+
+[node name="Buildup" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+autostart = true
+
+[node name="Blowout" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+
+[connection signal="timeout" from="Buildup" to="." method="BuildupTimeout"]
+[connection signal="timeout" from="Blowout" to="." method="BlowoutTimeout"]

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://djt2cme2qp08v"]
+
+[ext_resource type="Texture2D" uid="uid://bhhinpxji7gjg" path="res://assets/textures/SoldierAtlas.png" id="1_p2wdq"]
+[ext_resource type="Texture2D" uid="uid://cwhd5viaw4lvj" path="res://assets/textures/SoldierEmissionAtlas.png" id="2_3in4v"]
+
+[resource]
+albedo_texture = ExtResource("1_p2wdq")
+emission_enabled = true
+emission_energy_multiplier = 16.0
+emission_texture = ExtResource("2_3in4v")
+texture_filter = 0

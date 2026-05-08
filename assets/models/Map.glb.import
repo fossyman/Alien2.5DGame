@@ -33,6 +33,12 @@ animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
+"materials": {
+"Stone": {
+"use_external/enabled": true,
+"use_external/path": "uid://c6cciwvvrjmlk"
+}
+},
 "nodes": {
 "PATH:Cube": {
 "generate/physics": true,
@@ -71,6 +77,67 @@ _subresources={
 "PATH:Cylinder": {
 "generate/physics": true,
 "physics/shape_type": 1
+},
+"PATH:Cylinder_001": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_002": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_003": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_004": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_005": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_006": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_007": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_008": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_009": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_010": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_011": {
+"decomposition/precision": 1,
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Cylinder_012": {
+"decomposition/precision": 1,
+"decomposition/resolution": 0,
+"generate/physics": true,
+"physics/shape_type": 0
 }
 }
 }

@@ -1,0 +1,245 @@
+[gd_scene load_steps=24 format=3 uid="uid://lpbfx2mp7w5x"]
+
+[ext_resource type="Script" uid="uid://dgltfnultimkg" path="res://src/RootManager.gd" id="1_3f26u"]
+[ext_resource type="Script" uid="uid://cd6qse33ky07d" path="res://src/MainMenuManager.gd" id="2_g54jn"]
+[ext_resource type="PackedScene" uid="uid://cq3dxoossscxu" path="res://assets/models/UFO.glb" id="2_ic773"]
+[ext_resource type="Texture2D" uid="uid://dev0jk15cd4yx" path="res://assets/textures/Stars.jpg" id="2_tb635"]
+[ext_resource type="VideoStream" uid="uid://dyajqukoh5ne1" path="res://assets/Videos/IntroCutscene.ogv" id="4_g54jn"]
+[ext_resource type="Texture2D" uid="uid://uhjux6txo8cr" path="res://assets/textures/Titlecard.png" id="5_wkskc"]
+[ext_resource type="AudioStream" uid="uid://domf717grelpy" path="res://assets/Videos/CUTSCENEv2audio.ogg" id="7_cn1l7"]
+[ext_resource type="AudioStream" uid="uid://dddvboyq13dqj" path="res://assets/Audio/Music/MainMenuSong.wav" id="8_a67y4"]
+
+[sub_resource type="Sky" id="Sky_wkskc"]
+
+[sub_resource type="Environment" id="Environment_ddmyt"]
+background_mode = 2
+sky = SubResource("Sky_wkskc")
+ambient_light_source = 3
+ambient_light_sky_contribution = 0.0
+reflected_light_source = 1
+glow_enabled = true
+glow_normalized = true
+glow_blend_mode = 0
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 5.0
+fog_depth_begin = 0.0
+fog_depth_end = 1766.0
+volumetric_fog_density = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a67y4"]
+shading_mode = 0
+albedo_color = Color(0.441406, 0.441406, 0.441406, 1)
+albedo_texture = ExtResource("2_tb635")
+uv1_scale = Vector3(-0.004, -0.004, -0.004)
+uv1_offset = Vector3(0.7, -0.26, -0.92)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_cn1l7"]
+flip_faces = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_a67y4"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cn1l7"]
+as_normal_map = true
+noise = SubResource("FastNoiseLite_a67y4")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dk3l8"]
+albedo_color = Color(0, 0.8125, 1, 1)
+metallic = 0.56
+metallic_specular = 1.0
+roughness = 0.26
+normal_enabled = true
+normal_scale = -1.84
+normal_texture = SubResource("NoiseTexture2D_cn1l7")
+
+[sub_resource type="Animation" id="Animation_wkskc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_tb635"]
+resource_name = "new_animation"
+length = 10.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.5, 5, 7.46667, 10),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.261799, 0, 0), Vector3(0.0314159, 0, -0.0279253), Vector3(-0.261799, 0, 0), Vector3(-0.0261799, 0, -0.0733038), Vector3(0.261799, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a67y4"]
+_data = {
+&"RESET": SubResource("Animation_wkskc"),
+&"new_animation": SubResource("Animation_tb635")
+}
+
+[sub_resource type="Curve" id="Curve_g54jn"]
+_data = [Vector2(0, 1), 0.0, -9.87028, 0, 0, Vector2(0.298569, 0), 0.125599, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tb635"]
+curve = SubResource("Curve_g54jn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_g54jn"]
+emission_shape_scale = Vector3(0, 100, 100)
+emission_shape = 3
+emission_box_extents = Vector3(1, 1, 1)
+spread = 0.0
+initial_velocity_min = 200.0
+initial_velocity_max = 1000.0
+gravity = Vector3(0, 0, 0)
+alpha_curve = SubResource("CurveTexture_tb635")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wkskc"]
+transparency = 1
+vertex_color_use_as_albedo = true
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_tb635"]
+material = SubResource("StandardMaterial3D_wkskc")
+
+[node name="main" type="Node"]
+script = ExtResource("1_3f26u")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0)
+light_energy = 0.055
+light_cull_mask = 4294967293
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ddmyt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldEnvironment"]
+transform = Transform3D(-347.856, 0, 359.16, 0, 500, 0, -359.16, 0, -347.856, 37.1904, 0, -36.0199)
+material_override = SubResource("StandardMaterial3D_a67y4")
+mesh = SubResource("SphereMesh_cn1l7")
+
+[node name="Map" type="Node" parent="." node_paths=PackedStringArray("VideoPlayer", "IntroCutsceneAudio", "Music")]
+script = ExtResource("2_g54jn")
+VideoPlayer = NodePath("../VideoStreamPlayer")
+IntroCutsceneAudio = NodePath("../VideoStreamPlayer/AudioStreamPlayer")
+Music = NodePath("../AudioStreamPlayer")
+
+[node name="UFO" parent="Map" instance=ExtResource("2_ic773")]
+
+[node name="Plane_004" parent="Map/UFO" index="0"]
+transform = Transform3D(3.21692, 0, 0, 0, 3.21692, 0, 0, 0, 3.21692, 0, 0, 0)
+surface_material_override/1 = SubResource("StandardMaterial3D_dk3l8")
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Map/UFO"]
+libraries = {
+&"": SubResource("AnimationLibrary_a67y4")
+}
+autoplay = "new_animation"
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Map"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68.3195, 0, 0)
+amount = 5
+lifetime = 2.0
+visibility_aabb = AABB(-4, -4, -4, 55.71, 8, 8)
+process_material = SubResource("ParticleProcessMaterial_g54jn")
+draw_pass_1 = SubResource("QuadMesh_tb635")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="Map"]
+transform = Transform3D(0.937834, 0, -0.347083, 0, 1, 0, 0.347083, 0, 0.937834, -104.788, 0, -87.2827)
+amount = 5
+lifetime = 2.0
+visibility_aabb = AABB(-4, -4, -4, 150, 8, 8)
+process_material = SubResource("ParticleProcessMaterial_g54jn")
+draw_pass_1 = SubResource("QuadMesh_tb635")
+
+[node name="Constant" type="Node" parent="."]
+
+[node name="Control" type="Control" parent="Constant"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayButton" type="Button" parent="Constant/Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 45.0
+offset_top = -199.0
+offset_right = 364.0
+offset_bottom = -123.0
+grow_vertical = 0
+text = "Play"
+
+[node name="QuitButton" type="Button" parent="Constant/Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 45.0
+offset_top = -114.0
+offset_right = 363.0
+offset_bottom = -38.0
+grow_vertical = 0
+text = "Quit Game"
+
+[node name="TextureRect" type="TextureRect" parent="Constant/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -774.0
+offset_top = 41.0
+offset_right = -39.0
+offset_bottom = 149.0
+grow_horizontal = 0
+texture = ExtResource("5_wkskc")
+expand_mode = 1
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.816151, 0.0612796, -0.57458, -0.00875985, 0.995559, 0.0937346, 0.577772, -0.0714684, 0.813063, -32.9981, 5.48158, 33.5049)
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+audio_track = 128
+stream = ExtResource("4_g54jn")
+expand = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="VideoStreamPlayer"]
+stream = ExtResource("7_cn1l7")
+volume_db = -15.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_a67y4")
+autoplay = true
+bus = &"MUSIC"
+
+[connection signal="pressed" from="Constant/Control/PlayButton" to="Map" method="PlayGame"]
+[connection signal="pressed" from="Constant/Control/QuitButton" to="Map" method="Quit"]
+
+[editable path="Map/UFO"]

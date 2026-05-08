@@ -41,7 +41,7 @@ var TrackingTimer:Timer
 func _ready() -> void:
 	TrackingTimer = Timer.new()
 	TrackingTimer.wait_time = TimeToLoseTrack
-	TrackingTimer.one_shot = false
+	TrackingTimer.one_shot = true
 	add_child(TrackingTimer)
 	TrackingTimer.timeout.connect(LoseTrackOfPlayer)
 	
@@ -91,7 +91,7 @@ func _on_vision_area_entered(area: Area3D) -> void:
 func _on_vision_area_exited(area: Area3D) -> void:
 	if area.get_parent() is Playermanager:
 		PlayerInProximity = false
-		TrackingTimer.start()
+		#TrackingTimer.start()
 		pass
 	pass # Replace with function body.
 

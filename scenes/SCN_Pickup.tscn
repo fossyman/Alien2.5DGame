@@ -1,0 +1,122 @@
+[gd_scene load_steps=20 format=3 uid="uid://sm6peixe21qu"]
+
+[ext_resource type="PackedScene" uid="uid://b8j1kqyf85vk6" path="res://assets/models/Unlockable.glb" id="1_nwa78"]
+[ext_resource type="Script" uid="uid://c4db62felalpw" path="res://src/PickupManager.gd" id="1_rjk0b"]
+[ext_resource type="Shader" uid="uid://bu1g05hidrvqd" path="res://assets/shaders/SHD_Scanner.gdshader" id="3_km75a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dhblu"]
+albedo_color = Color(0.244945, 0.246094, 0.0990143, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a5ieu"]
+albedo_color = Color(0.429688, 0.419394, 0.166168, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e04jb"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(0.992188, 1, 0, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="Gradient" id="Gradient_dhblu"]
+colors = PackedColorArray(0.769531, 0.769531, 0.769531, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_a5ieu"]
+frequency = 0.0665
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_n300e"]
+color_ramp = SubResource("Gradient_dhblu")
+noise = SubResource("FastNoiseLite_a5ieu")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1uua3"]
+albedo_color = Color(0.472656, 0.461694, 0.192017, 1)
+albedo_texture = SubResource("NoiseTexture2D_n300e")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_27lse"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(0.460938, 0.442932, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_km75a"]
+albedo_color = Color(0.690061, 0.753906, 0.533035, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vtl67"]
+albedo_color = Color(0.464844, 0.464844, 0.464844, 1)
+
+[sub_resource type="Gradient" id="Gradient_vtl67"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.211039, 1)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_42kx5"]
+gradient = SubResource("Gradient_vtl67")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6mka2"]
+render_priority = 0
+shader = ExtResource("3_km75a")
+shader_parameter/Albedo = Color(1, 0.46875, 0, 1)
+shader_parameter/alpha = 0.52
+shader_parameter/AlbedoTex = SubResource("GradientTexture2D_42kx5")
+shader_parameter/ScrollSpeed = Vector2(0, 10)
+shader_parameter/Scale = Vector2(1, 5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_42kx5"]
+albedo_color = Color(0, 1, 0.953125, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6mka2"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(0.195313, 1, 0, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_nwa78"]
+radius = 0.390594
+
+[node name="Pickup" type="Node3D" node_paths=PackedStringArray("AnimPlayer")]
+script = ExtResource("1_rjk0b")
+AnimPlayer = NodePath("Unlockable/AnimationPlayer")
+
+[node name="Unlockable" parent="." instance=ExtResource("1_nwa78")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="Cube" parent="Unlockable/Armature/Skeleton3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_dhblu")
+surface_material_override/1 = SubResource("StandardMaterial3D_a5ieu")
+surface_material_override/2 = SubResource("StandardMaterial3D_e04jb")
+
+[node name="Cube_001" parent="Unlockable/Armature/Skeleton3D" index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_1uua3")
+surface_material_override/1 = SubResource("StandardMaterial3D_27lse")
+
+[node name="Cube_002" parent="Unlockable/Armature/Skeleton3D" index="2"]
+surface_material_override/0 = SubResource("StandardMaterial3D_1uua3")
+surface_material_override/1 = SubResource("StandardMaterial3D_27lse")
+
+[node name="Cube_003" parent="Unlockable/Armature/Skeleton3D" index="3"]
+surface_material_override/0 = SubResource("StandardMaterial3D_1uua3")
+surface_material_override/1 = SubResource("StandardMaterial3D_27lse")
+
+[node name="Cylinder" parent="Unlockable/Armature/Skeleton3D" index="4"]
+surface_material_override/0 = SubResource("StandardMaterial3D_km75a")
+surface_material_override/1 = SubResource("StandardMaterial3D_vtl67")
+surface_material_override/2 = SubResource("ShaderMaterial_6mka2")
+surface_material_override/3 = SubResource("StandardMaterial3D_42kx5")
+surface_material_override/4 = SubResource("StandardMaterial3D_6mka2")
+
+[node name="AnimationPlayer" parent="Unlockable" index="1"]
+autoplay = "Idle"
+
+[node name="PickupArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupArea"]
+shape = SubResource("SphereShape3D_nwa78")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.867188, 0, 1)
+light_energy = 0.011
+omni_range = 1.18385
+omni_attenuation = -0.747
+
+[connection signal="body_entered" from="PickupArea" to="." method="_on_pickup_area_body_entered"]
+
+[editable path="Unlockable"]

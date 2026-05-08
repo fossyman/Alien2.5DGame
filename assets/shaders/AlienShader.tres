@@ -1,0 +1,64 @@
+[gd_resource type="VisualShader" load_steps=6 format=3 uid="uid://blybbna6vy48n"]
+
+[sub_resource type="VisualShaderNodeFresnel" id="VisualShaderNodeFresnel_7qm84"]
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_7qm84"]
+parameter_name = "FresnelPower"
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_7qm84"]
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_7qm84"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_il2bh"]
+parameter_name = "FresnelColor"
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform sampler2D tex_frg_4;
+uniform float FresnelPower;
+uniform vec4 FresnelColor : source_color;
+
+
+
+void fragment() {
+// Texture2D:4
+	vec4 n_out4p0 = texture(tex_frg_4, UV);
+
+
+// FloatParameter:3
+	float n_out3p0 = FresnelPower;
+
+
+// Fresnel:2
+	float n_out2p0 = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), n_out3p0);
+
+
+// ColorParameter:6
+	vec4 n_out6p0 = FresnelColor;
+
+
+// VectorOp:5
+	vec3 n_out5p0 = vec3(n_out2p0) * vec3(n_out6p0.xyz);
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0.xyz);
+	EMISSION = n_out5p0;
+
+
+}
+"
+nodes/fragment/2/node = SubResource("VisualShaderNodeFresnel_7qm84")
+nodes/fragment/2/position = Vector2(-300, 320)
+nodes/fragment/3/node = SubResource("VisualShaderNodeFloatParameter_7qm84")
+nodes/fragment/3/position = Vector2(-620, 360)
+nodes/fragment/4/node = SubResource("VisualShaderNodeTexture_7qm84")
+nodes/fragment/4/position = Vector2(100, 20)
+nodes/fragment/5/node = SubResource("VisualShaderNodeVectorOp_7qm84")
+nodes/fragment/5/position = Vector2(53.7872, 410.371)
+nodes/fragment/6/node = SubResource("VisualShaderNodeColorParameter_il2bh")
+nodes/fragment/6/position = Vector2(-220, 600)
+nodes/fragment/connections = PackedInt32Array(3, 0, 2, 3, 4, 0, 0, 0, 2, 0, 5, 0, 6, 0, 5, 1, 5, 0, 0, 5)
